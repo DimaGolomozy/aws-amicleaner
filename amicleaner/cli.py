@@ -30,6 +30,7 @@ class App(object):
         self.force_delete = args.force_delete
         self.ami_min_days = args.ami_min_days
         self.exclude_shared = args.exclude_shared
+        self.dry_run = args.dry_run
 
         self.mapping_strategy = {
             "key": self.mapping_key,
@@ -69,7 +70,7 @@ class App(object):
         if not candidates_amis:
             return None
 
-        c = AMICleaner()
+        c = AMICleaner(dry_run=self.dry_run)
 
         mapped_amis = c.map_candidates(
             candidates_amis=candidates_amis,
@@ -107,10 +108,10 @@ class App(object):
             print(TERM.bold("\nCleaning from {} AMI id(s) ...".format(
                 len(candidates))
             ))
-            failed = AMICleaner().remove_amis_from_ids(candidates)
+            failed = AMICleaner(dry_run=self.dry_run).remove_amis_from_ids(candidates)
         else:
             print(TERM.bold("\nCleaning {} AMIs ...".format(len(candidates))))
-            failed = AMICleaner().remove_amis(candidates)
+            failed = AMICleaner(dry_run=self.dry_run).remove_amis(candidates)
 
         if failed:
             print(TERM.red("\n{0} failed snapshots".format(len(failed))))

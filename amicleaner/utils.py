@@ -117,6 +117,11 @@ def parse_args(args):
                         action="store_true",
                         help="Check and clean orphaned snapshots")
 
+    parser.add_argument("--dry-run",
+                        dest='dry_run',
+                        action="store_true",
+                        help="Dry Run")
+
     parser.add_argument("--ami-min-days",
                         dest='ami_min_days',
                         type=int,

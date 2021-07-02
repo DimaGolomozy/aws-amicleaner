@@ -97,8 +97,9 @@ class OrphanSnapshotCleaner(object):
 
 class AMICleaner(object):
 
-    def __init__(self, ec2=None):
+    def __init__(self, ec2=None, dry_run=False):
         self.ec2 = ec2 or boto3.client('ec2', config=Config(retries={'max_attempts': BOTO3_RETRIES}))
+        self.dry_run = dry_run
 
     @staticmethod
     def get_ami_sorting_key(ami):
@@ -118,11 +119,13 @@ class AMICleaner(object):
 
         amis = amis or []
         for ami in amis:
-            self.ec2.deregister_image(ImageId=ami.id)
+            if not self.dry_run:
+                self.ec2.deregister_image(ImageId=ami.id)
             print("{0} deregistered".format(ami.id))
             for block_device in ami.block_device_mappings:
                 if block_device.snapshot_id is not None:
                     try:
+                        if not self.dry_run:
                             self.ec2.delete_snapshot(
                                 SnapshotId=block_device.snapshot_id
                             )
