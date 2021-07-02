@@ -95,6 +95,11 @@ def parse_args(args):
                         nargs='+',
                         help="List of values to be excluded from tags")
 
+    parser.add_argument("--exclude-shared",
+                        dest='exclude_shared',
+                        action='store_true',
+                        help="Exclude AMIs that been shared with another aws account number")
+
     parser.add_argument("--keep-previous",
                         dest='keep_previous',
                         type=int,

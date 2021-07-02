@@ -29,6 +29,7 @@ class App(object):
         self.full_report = args.full_report
         self.force_delete = args.force_delete
         self.ami_min_days = args.ami_min_days
+        self.exclude_shared = args.exclude_shared
 
         self.mapping_strategy = {
             "key": self.mapping_key,
@@ -87,7 +88,7 @@ class App(object):
             if not group_name:
                 report["no-tags (excluded)"] = amis
             else:
-                reduced = c.reduce_candidates(amis, self.keep_previous, self.ami_min_days)
+                reduced = c.reduce_candidates(amis, self.keep_previous, self.ami_min_days, self.exclude_shared)
                 if reduced:
                     report[group_name] = reduced
                     candidates.extend(reduced)
