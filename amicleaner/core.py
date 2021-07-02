@@ -265,9 +265,14 @@ class AMICleaner(object):
         mapped_candidates_ami = result_amis
 
         if exclude_shared:
-            mapped_candidates_ami = [
-                ami for ami in mapped_candidates_ami if not self.is_ami_shared(ami.id) and not sleep(0.25)
-            ]
+            tmp = []
+            for ami in mapped_candidates_ami:
+                if self.is_ami_shared(ami.id):
+                    print("Excluding Shared AMI: {0}\n".format(ami.id))
+                else:
+                    tmp.append(ami)
+                sleep(0.25)
+            mapped_candidates_ami = tmp
 
         if not keep_previous:
             return mapped_candidates_ami
