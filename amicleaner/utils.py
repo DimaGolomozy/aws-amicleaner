@@ -8,7 +8,7 @@ import argparse
 
 from prettytable import PrettyTable
 
-from .resources.config import KEEP_PREVIOUS, AMI_MIN_DAYS
+from resources.config import KEEP_PREVIOUS, AMI_MIN_DAYS
 
 
 class Printer(object):
@@ -94,6 +94,11 @@ def parse_args(args):
                         dest='excluded_mapping_values',
                         nargs='+',
                         help="List of values to be excluded from tags")
+
+    parser.add_argument("--exclude-shared",
+                        dest='exclude_shared',
+                        action='store_true',
+                        help="Exclude AMIs that been shared with another aws account number")
 
     parser.add_argument("--keep-previous",
                         dest='keep_previous',

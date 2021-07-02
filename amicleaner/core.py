@@ -4,12 +4,14 @@
 from __future__ import print_function
 from __future__ import absolute_import
 from builtins import object
+from time import sleep
+
 import boto3
 from botocore.exceptions import ClientError
 from botocore.config import Config
 
-from .resources.config import BOTO3_RETRIES
-from .resources.models import AMI
+from resources.config import BOTO3_RETRIES
+from resources.models import AMI
 
 from datetime import datetime
 
@@ -238,7 +240,7 @@ class AMICleaner(object):
 
         return ".".join(sorted(tag_values))
 
-    def reduce_candidates(self, mapped_candidates_ami, keep_previous=0, ami_min_days=-1):
+    def reduce_candidates(self, mapped_candidates_ami, keep_previous=0, ami_min_days=-1, exclude_shared=False):
 
         """
         Given a array of AMIs to clean this function return a subsequent
@@ -259,6 +261,11 @@ class AMICleaner(object):
 
         mapped_candidates_ami = result_amis
 
+        if exclude_shared:
+            mapped_candidates_ami = [
+                ami for ami in mapped_candidates_ami if not self.is_ami_shared(ami.id) and not sleep(0.25)
+            ]
+
         if not keep_previous:
             return mapped_candidates_ami
 
@@ -272,3 +279,7 @@ class AMICleaner(object):
         )
 
         return amis[keep_previous:]
+
+    def is_ami_shared(self, ami_id):
+        lp = self.ec2.describe_image_attribute(Attribute='launchPermission', ImageId=ami_id)
+        return True if lp["LaunchPermissions"] else False
