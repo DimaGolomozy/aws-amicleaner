@@ -1,4 +1,4 @@
-FROM python:3.6
+FROM python:3.6.14-slim-buster
 
 RUN apt-get update && apt-get install -y \
   vim \
@@ -11,4 +11,4 @@ ENV PATH="${PATH}:/root/.local/bin/"
 WORKDIR /aws-amicleaner
 ADD . .
 RUN python setup.py install
-CMD bash
+ENTRYPOINT ["amicleaner"]
