@@ -146,6 +146,7 @@ class App(object):
         print(TERM.green("excluded_mapping_values : {0}".format(self.excluded_mapping_values)))
         print(TERM.green("keep_previous : {0}".format(self.keep_previous)))
         print(TERM.green("ami_min_days : {0}".format(self.ami_min_days)))
+        print(TERM.green("exclude_shared : {0}".format(self.exclude_shared)))
 
     @staticmethod
     def print_version():
